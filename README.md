@@ -17,4 +17,20 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## UML
 
+```mermaid
+flowchart TD
+    Main["main.jsx"] --> App["App — class component<br/>state: data, requestParams"]
+    App --> Header["Header — function"]
+    App --> Form["Form — function"]
+    App --> Results["Results — function"]
+    App --> Footer["Footer — function"]
+
+    App -->|"handleApiCall callback prop"| Form
+    Form -->|"submit: handleApiCall(formData)"| App
+    App -->|"data prop: mock results"| Results
+```
+
 ## Changelog
+
+- Established the course starter and installed lab dependencies; `src/`, `package.json`.
+- 
