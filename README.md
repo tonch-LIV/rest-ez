@@ -1,19 +1,43 @@
 # rest-ez
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A browser-based API testing application built with React and Vite.
+Lab 26 establishes the component structure and displays mock response data.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+Open the local address printed by Vite.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Phase 1
 
-## Expanding the ESLint configuration
+- Owns request parameters and response data in a class component; `src/App.jsx`.
+- Renders Header, Footer, Form, and Results as function components; `src/Components/`.
+- Submits fixed GET parameters through a callback prop; `Form`, `App.callApi`.
+- Displays formatted mock JSON; `Results`.
+- Loads application and component styles from SCSS files.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Current Limitations
+
+- The entered URL and displayed method options do not change the submitted parameters.
+- Responses are mock data; no network request is performed.
+- Request bodies, history, and loading indicators are pending later phases.
+
+## Verification
+
+Manual browser verification: submitting with GO! displays GET, the fixed
+Pokémon endpoint, and two mock results.
+
+```bash
+npm run lint
+npm run build
+```
+
+ESLint and the production build passed; `npm run lint`, `npm run build`.  
+Automated tests, CI, and deployment are not configured.
 
 ## UML
 
@@ -33,4 +57,5 @@ flowchart TD
 ## Changelog
 
 - Established the course starter and installed lab dependencies; `src/`, `package.json`.
-- 
+- Converted child components to functions and separated component styles while preserving mock submission; `src/Components/`, `src/App.scss`.
+- Documented application behavior, setup, and current limitations; `README.md`, `src/App.jsx`.

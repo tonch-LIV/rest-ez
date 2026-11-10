@@ -1,13 +1,15 @@
-import React from 'react';
+import './Header.scss';
 
-class Header extends React.Component {
-  render() {
-    return (
-      <header>
-        <h1>RESTy</h1>
-      </header>
-    );
-  }
+/**
+ * Displays the app title.
+ * @returns {import('react').ReactElement} app header.
+ */
+function Header() {
+  return (
+    <header>
+      <h1>RESTy</h1>
+    </header>
+  );
 }
 
 export default Header;
