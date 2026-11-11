@@ -1,15 +1,30 @@
 import './Results.scss';
 
 /**
- * Displays formatted mock response data.
+ * Displays loading status or formatted response data (headers and body).
  * @param {object} props - Component properties.
- * @param {object|null} props.data - Response data, or null before submission.
- * @returns {import('react').ReactElement} Results section.
+ * @param {object|null} props.data - Response data (headers and body), or null before submission.
+ * @param {boolean} props.loading - depends if request is running
+ * @returns {import('react').ReactElement|null} Results section; Status, response, or nothing.
  */
-function Results({ data }) {
+function Results({ data, loading }) {
+  if (loading) {
+    return <p role="status">Loading...</p>;
+  }
+
+  if (!data) {
+    return null;
+  }
+
   return (
-    <section className="results">
-      <pre>{data ? JSON.stringify(data, undefined, 2) : null}</pre>
+    <section className="results" aria-label="Response">
+      <h2>Response</h2>
+
+      <h3>Headers</h3>
+      <pre>{JSON.stringify(data.headers, null, 2)}</pre>
+
+      <h3>Body</h3>
+      <pre>{JSON.stringify(data.body, null, 2)}</pre>
     </section>
   );
 }

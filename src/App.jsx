@@ -1,69 +1,72 @@
-import React from 'react';
+import { useState } from 'react';
 
 import './App.scss';
 
-// Let's talk about using index.js and some other name in the component folder.
-// There's pros and cons for each way of doing this...
-// OFFICIALLY, we have chosen to use the Airbnb style guide naming convention. 
-// Why is this source of truth beneficial when spread across a global organization?
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
 
 /**
- * Owns request state and coordinates the application components.
- * @extends React.Component
- */
-class App extends React.Component {
-
-  /**
- * Initializes response data and request parameters.
- * @param {object} props - Component properties.
- */
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: null,
-      requestParams: {},
-    };
-  }
-
-  /**
- * Stores submitted request parameters and a mock response.
- * @param {object} requestParams - Submitted request details.
- * @param {string} requestParams.method - HTTP method.
- * @param {string} requestParams.url - Endpoint URL.
- * @returns {void}
- */
-  callApi = (requestParams) => {
-    // mock output
-    const data = {
-      count: 2,
-      results: [
-        {name: 'fake thing 1', url: 'http://fakethings.com/1'},
-        {name: 'fake thing 2', url: 'http://fakethings.com/2'},
-      ],
-    };
-    this.setState({data, requestParams});
-  }
-
-  /**
- * Displays the application using its current state.
+ * Owns the submitted request and mock response.
  * @returns {import('react').ReactElement} Application interface.
  */
-  render() {
-    return (
-      <React.Fragment>
-        <Header />
-        <div>Request Method: {this.state.requestParams.method}</div>
-        <div>URL: {this.state.requestParams.url}</div>
-        <Form handleApiCall={this.callApi} />
-        <Results data={this.state.data} />
-        <Footer />
-      </React.Fragment>
-    );
+function App() {
+  const [data, setData] = useState(null);
+  const [requestParams, setRequestParams] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  /**
+   * Records a submitted request and starts the loading state.
+   * @param {object} params - Submitted method, URL, and body.
+   * @returns {void}
+   */
+  function startRequest(params) {
+    setRequestParams(params);
+    setData(null);
+    setLoading(true);
   }
+
+  /**
+   * Stores the mock response and ends the loading state.
+   * @param {object} response - Completed response.
+   * @param {object} response.headers - Mock response headers.
+   * @param {object} response.body - Mock response body.
+   * @returns {void}
+   */
+  function completeRequest(response) {
+    setData(response);
+    setLoading(false);
+  }
+
+  return (
+    <>
+      <Header />
+
+      {requestParams && (
+        <section aria-label="Request summary">
+          <h2>Request</h2>
+          <div>Request Method: {requestParams.method}</div>
+          <div>URL: {requestParams.url}</div>
+
+          {requestParams.body !== null && (
+            <>
+              <h3>Request body</h3>
+              <pre>{requestParams.body}</pre>
+            </>
+          )}
+        </section>
+      )}
+
+      <Form
+        onRequestStart={startRequest}
+        onRequestComplete={completeRequest}
+        loading={loading}
+      />
+      <Results data={data} loading={loading} />
+      <Footer />
+    </>
+  );
 }
 
 export default App;
