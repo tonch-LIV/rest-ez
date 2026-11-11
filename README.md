@@ -65,8 +65,8 @@ flowchart TD
 
 ## Pull Requests
 
-- [Lab 26: Component refactor](https://github.com/tonch-LIV/rest-ez/pull/1)
-- [Lab 26: useState implementation & refactor]([https://github.com/tonch-LIV/rest-ez/pull/2](https://github.com/tonch-LIV/rest-ez/pull/2))
+- [Phase 1 | Lab 26: Component refactor](https://github.com/tonch-LIV/rest-ez/pull/1)
+- [Phase 2 | Lab 27: useState implementation & refactor](https://github.com/tonch-LIV/rest-ez/pull/2)
 
 ## Changelog
 
