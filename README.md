@@ -29,7 +29,7 @@ Open the local address printed by Vite.
 - Manually verified submitted values and separation between edited and submitted state.
 - Added request loading state and separate formatted response headers/body; `App`, `Form`, `Results`.
 - Added behavior tests and a CI workflow; `src/App.test.jsx`, `.github/workflows/ci.yml`.
-- Pending: the first GitHub Actions run.
+- First GitHub Actions ran and passed.
 
 ## Current Limitations
 
@@ -48,7 +48,7 @@ npm run build
 
 Local ESLint, all five behavior tests, and the production build passed; `npm run lint`, `npm run test:run`, `npm run build`.
 
-Github actions are configured; pending first run.
+GitHub Actions passed dependency installation, ESLint, all five tests, and the production build; `.github/workflows/ci.yml`.
 Deployment is not configured.
 
 ## UML
@@ -66,6 +66,7 @@ flowchart TD
 ## Pull Requests
 
 - [Lab 26: Component refactor](https://github.com/tonch-LIV/rest-ez/pull/1)
+- [Lab 26: useState implementation & refactor]([https://github.com/tonch-LIV/rest-ez/pull/2](https://github.com/tonch-LIV/rest-ez/pull/2))
 
 ## Changelog
 
