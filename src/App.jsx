@@ -14,26 +14,29 @@ import Results from './Components/Results';
 function App() {
   const [data, setData] = useState(null);
   const [requestParams, setRequestParams] = useState(null);
-  
+  const [loading, setLoading] = useState(false);
 
   /**
-   * Stores submitted values and generates a mock response.
-   * @param {object} params - Submitted request.
-   * @param {string} params.method - Selected HTTP method.
-   * @param {string} params.url - Entered endpoint.
-   * @param {string|null} params.body - JSON text for POST or PUT.
+   * Records a submitted request and starts the loading state.
+   * @param {object} params - Submitted method, URL, and body.
    * @returns {void}
    */
-  function callApi(params) {
+  function startRequest(params) {
     setRequestParams(params);
+    setData(null);
+    setLoading(true);
+  }
 
-    setData({
-      count: 2,
-      results: [
-        { name: 'fake thing 1', url: 'http://fakethings.com/1' },
-        { name: 'fake thing 2', url: 'http://fakethings.com/2' },
-      ],
-    });
+  /**
+   * Stores the mock response and ends the loading state.
+   * @param {object} response - Completed response.
+   * @param {object} response.headers - Mock response headers.
+   * @param {object} response.body - Mock response body.
+   * @returns {void}
+   */
+  function completeRequest(response) {
+    setData(response);
+    setLoading(false);
   }
 
   return (
@@ -55,8 +58,12 @@ function App() {
         </section>
       )}
 
-      <Form handleApiCall={callApi} />
-      <Results data={data} />
+      <Form
+        onRequestStart={startRequest}
+        onRequestComplete={completeRequest}
+        loading={loading}
+      />
+      <Results data={data} loading={loading} />
       <Footer />
     </>
   );
