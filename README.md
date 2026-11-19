@@ -42,7 +42,7 @@ Open the local address printed by Vite.
 - Displays response status, accessible headers, complete body, and errors; `Results`.
 - Manually verified live GET requests, repeated submissions, and invalid JSON handling.
 - Added an expandable JSON viewer and MSW request tests; `Results`, `src/__tests__/App.test.jsx`, `src/test/server.js`.
-- Pending: phase 3 GitHub Actions verification.
+- GitHub Actions passed installation, lint, all eight tests, and build; `.github/workflows/ci.yml`.
 
 ## Verification
 
@@ -61,7 +61,7 @@ Local ESLint, all five behavior tests, and the production build passed; `npm run
 
 **`Phase 3:`**  
 Phase 3 browser verification passed.  
-Local ESLint, all eight integration tests, and the production build passed; `npm run lint`, `npm run test:run`, `npm run build`. GitHub Actions verification is pending.
+Local ESLint, all eight integration tests, and the production build passed; `npm run lint`, `npm run test:run`, `npm run build`. GitHub Actions passed the same checks.
 
 ## UML
 
@@ -83,6 +83,7 @@ flowchart TD
 
 - [Phase 1 | Lab 26: Component refactor](https://github.com/tonch-LIV/rest-ez/pull/1)
 - [Phase 2 | Lab 27: useState implementation & refactor](https://github.com/tonch-LIV/rest-ez/pull/2)
+- [Phase 3 | Lab 28: useEffect and live API requests](https://github.com/tonch-LIV/rest-ez/pull/3)
 
 ## Changelog
 
