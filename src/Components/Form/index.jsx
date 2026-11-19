@@ -3,14 +3,13 @@ import { useState } from 'react';
 import './Form.scss';
 
 /**
- * Collects request values and performs a simulated request.
+ * Collects request values and submits them to App.
  * @param {object} props - Component properties.
- * @param {Function} props.onRequestStart - Receives submitted parameters.
- * @param {Function} props.onRequestComplete - Receives the mock response.
+ * @param {Function} props.onSubmitRequest - Receives submitted values.
  * @param {boolean} props.loading - Whether a request is running.
  * @returns {import('react').ReactElement} Request form.
  */
-function Form({ onRequestStart, onRequestComplete, loading }) {
+function Form({ onSubmitRequest, loading }) {
   const [url, setUrl] = useState('');
   const [method, setMethod] = useState('GET');
   const [body, setBody] = useState('');
@@ -18,38 +17,21 @@ function Form({ onRequestStart, onRequestComplete, loading }) {
   const hasBody = method === 'POST' || method === 'PUT';
 
   /**
-   * Submits current values and waits for a simulated response.
+   * Passes current form values to App without navigating.
    * @param {import('react').SyntheticEvent<HTMLFormElement>} event - Submit event.
-   * @returns {Promise<void>} Resolves when the mock request finishes.
+   * @returns {void}
    */
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
 
     if (loading) {
       return;
     }
 
-    const params = {
+    onSubmitRequest({
       method,
       url,
       body: hasBody ? body : null,
-    };
-
-    onRequestStart(params);
-
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    onRequestComplete({
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: {
-        count: 2,
-        results: [
-          { name: 'fake thing 1', url: 'http://fakethings.com/1' },
-          { name: 'fake thing 2', url: 'http://fakethings.com/2' },
-        ],
-      },
     });
   }
 

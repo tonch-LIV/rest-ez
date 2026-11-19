@@ -1,18 +1,21 @@
+import JsonView from '@uiw/react-json-view';
+
 import './Results.scss';
 
 /**
- * Displays loading status or formatted response data (headers and body).
+ * Displays request status, errors, and complete response data.
  * @param {object} props - Component properties.
- * @param {object|null} props.data - Response data (headers and body), or null before submission.
- * @param {boolean} props.loading - depends if request is running
- * @returns {import('react').ReactElement|null} Results section; Status, response, or nothing.
+ * @param {object|null} props.data - Response status, headers, and body.
+ * @param {boolean} props.loading - Whether a request is running.
+ * @param {string|null} props.error - Request error message.
+ * @returns {import('react').ReactElement|null} Request output.
  */
-function Results({ data, loading }) {
+function Results({ data, loading, error }) {
   if (loading) {
     return <p role="status">Loading...</p>;
   }
 
-  if (!data) {
+  if (!data && !error) {
     return null;
   }
 
@@ -20,11 +23,42 @@ function Results({ data, loading }) {
     <section className="results" aria-label="Response">
       <h2>Response</h2>
 
-      <h3>Headers</h3>
-      <pre>{JSON.stringify(data.headers, null, 2)}</pre>
+      {error && <p role="alert">{error}</p>}
 
-      <h3>Body</h3>
-      <pre>{JSON.stringify(data.body, null, 2)}</pre>
+      {data && (
+        <>
+          <div>HTTP Status: {data.status}</div>
+
+          <section aria-labelledby="response-headers-heading">
+            <h3 id="response-headers-heading">Headers</h3>
+            <JsonView
+              className="response-json"
+              value={data.headers}
+              collapsed={false}
+              shortenTextAfterLength={0}
+              displayDataTypes={false}
+              enableClipboard={false}
+            />
+          </section>
+
+          <section aria-labelledby="response-body-heading">
+            <h3 id="response-body-heading">Body</h3>
+
+            {data.body !== null && typeof data.body === 'object' ? (
+              <JsonView
+                className="response-json"
+                value={data.body}
+                collapsed={false}
+                shortenTextAfterLength={0}
+                displayDataTypes={false}
+                enableClipboard={false}
+              />
+            ) : (
+              <pre>{JSON.stringify(data.body, null, 2)}</pre>
+            )}
+          </section>
+        </>
+      )}
     </section>
   );
 }

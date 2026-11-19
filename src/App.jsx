@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './App.scss';
 
@@ -8,36 +8,109 @@ import Form from './Components/Form';
 import Results from './Components/Results';
 
 /**
- * Owns the submitted request and mock response.
+ * Coordinates submitted requests, live responses, and request status.
  * @returns {import('react').ReactElement} Application interface.
  */
 function App() {
   const [data, setData] = useState(null);
   const [requestParams, setRequestParams] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   /**
-   * Records a submitted request and starts the loading state.
-   * @param {object} params - Submitted method, URL, and body.
+   * Validates submitted values and schedules a request through state.
+   * @param {object} params - Submitted request.
+   * @param {string} params.url - Endpoint URL.
+   * @param {string} params.method - HTTP method.
+   * @param {string|null} params.body - Optional JSON request text.
    * @returns {void}
    */
-  function startRequest(params) {
-    setRequestParams(params);
+  function submitRequest(params) {
     setData(null);
-    setLoading(true);
+    setError(null);
+
+    try {
+      const target = new URL(params.url);
+
+      if (!['http:', 'https:'].includes(target.protocol)) {
+        throw new Error('Use an HTTP or HTTPS URL.');
+      }
+
+      if (params.body?.trim()) {
+        JSON.parse(params.body);
+      }
+
+      setRequestParams({ ...params });
+      setLoading(true);
+    } catch (cause) {
+      setError(`Invalid request: ${cause.message}`);
+      setLoading(false);
+    }
   }
 
-  /**
-   * Stores the mock response and ends the loading state.
-   * @param {object} response - Completed response.
-   * @param {object} response.headers - Mock response headers.
-   * @param {object} response.body - Mock response body.
-   * @returns {void}
-   */
-  function completeRequest(response) {
-    setData(response);
-    setLoading(false);
-  }
+  useEffect(() => {
+    if (!requestParams) {
+      return;
+    }
+
+    const controller = new AbortController();
+
+    /**
+     * Fetches and stores the complete response for this submitted request.
+     * @returns {Promise<void>} Resolves after request processing finishes.
+     */
+    async function sendRequest() {
+      try {
+        const options = {
+          method: requestParams.method,
+          signal: controller.signal,
+        };
+
+        if (requestParams.body?.trim()) {
+          options.headers = {
+            'Content-Type': 'application/json',
+          };
+          options.body = requestParams.body;
+        }
+
+        const response = await fetch(requestParams.url, options);
+        const text = await response.text();
+        const contentType = response.headers.get('content-type') || '';
+
+        const body = !text
+          ? null
+          : contentType.includes('json')
+            ? JSON.parse(text)
+            : text;
+
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        setData({
+          status: response.status,
+          headers: Object.fromEntries(response.headers.entries()),
+          body,
+        });
+
+        if (!response.ok) {
+          setError(`Request returned HTTP ${response.status}.`);
+        }
+      } catch (cause) {
+        if (!controller.signal.aborted) {
+          setError(`Request failed: ${cause.message}`);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    sendRequest();
+
+    return () => controller.abort();
+  }, [requestParams]);
 
   return (
     <>
@@ -58,12 +131,8 @@ function App() {
         </section>
       )}
 
-      <Form
-        onRequestStart={startRequest}
-        onRequestComplete={completeRequest}
-        loading={loading}
-      />
-      <Results data={data} loading={loading} />
+      <Form onSubmitRequest={submitRequest} loading={loading} />
+      <Results data={data} loading={loading} error={error} />
       <Footer />
     </>
   );

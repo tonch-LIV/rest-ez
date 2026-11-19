@@ -33,8 +33,16 @@ Open the local address printed by Vite.
 
 ## Current Limitations
 
-- Responses remain mocked; no network request is performed.
 - Request history remains for a later phase.
+
+## Phase 3 Progress
+
+- Sends submitted requests through an effect with cancellation cleanup; `App`.
+- Validates URL protocols and JSON request bodies before sending; `App.submitRequest`.
+- Displays response status, accessible headers, complete body, and errors; `Results`.
+- Manually verified live GET requests, repeated submissions, and invalid JSON handling.
+- Added an expandable JSON viewer and MSW request tests; `Results`, `src/__tests__/App.test.jsx`, `src/test/server.js`.
+- GitHub Actions passed installation, lint, all eight tests, and build; `.github/workflows/ci.yml`.
 
 ## Verification
 
@@ -46,27 +54,36 @@ npm run test:run
 npm run build
 ```
 
+**`Phase 2:`**  
+GitHub Actions passed dependency installation, ESLint, all five tests, and the production build; `.github/workflows/ci.yml`.
+Deployment is not configured.  
 Local ESLint, all five behavior tests, and the production build passed; `npm run lint`, `npm run test:run`, `npm run build`.
 
-GitHub Actions passed dependency installation, ESLint, all five tests, and the production build; `.github/workflows/ci.yml`.
-Deployment is not configured.
+**`Phase 3:`**  
+Phase 3 browser verification passed.  
+Local ESLint, all eight integration tests, and the production build passed; `npm run lint`, `npm run test:run`, `npm run build`. GitHub Actions passed the same checks.
 
 ## UML
 
 ```mermaid
 flowchart TD
-    Main["main.jsx"] --> App["App<br/>useState: requestParams, data, loading"]
+    Main["main.jsx"] --> App["App<br/>requestParams, data, loading, error"]
     App --> Header["Header"]
     App --> Footer["Footer"]
-    App -->|"start/complete callbacks and loading"| Form["Form<br/>useState: url, method, body<br/>Runs mock request"]
-    Form -->|"request started/completed"| App
-    App -->|"data and loading"| Results["Results<br/>Loading or headers/body"]
+    App -->|"submission callback and loading"| Form["Form<br/>url, method, body"]
+    Form -->|"submitted values"| App
+    App -->|"requestParams changes"| Effect["useEffect"]
+    Effect -->|"fetch"| API["Remote API"]
+    API -->|"status, headers, body"| Effect
+    Effect -->|"update response state"| App
+    App -->|"data, loading, error"| Results["Results"]
 ```
 
 ## Pull Requests
 
 - [Phase 1 | Lab 26: Component refactor](https://github.com/tonch-LIV/rest-ez/pull/1)
 - [Phase 2 | Lab 27: useState implementation & refactor](https://github.com/tonch-LIV/rest-ez/pull/2)
+- [Phase 3 | Lab 28: useEffect and live API requests](https://github.com/tonch-LIV/rest-ez/pull/3)
 
 ## Changelog
 
@@ -77,3 +94,5 @@ flowchart TD
 - Added simulated request loading and separate response headers/body; `App`, `Form`, `Results`.
 - Added request-flow tests and automated lint/test/build checks; `src/App.test.jsx`, `.github/workflows/ci.yml`.
 - Selected npm 11.6.0 for dependency installation locally and in CI; `README.md`, `.github/workflows/ci.yml`.
+- Added effect-driven live requests, cancellation, validation, and error output; `App`, `Form`, `Results`.
+- Added color-coded response trees and MSW integration tests; `Results`, `src/__tests__/App.test.jsx`, `src/test/`.
