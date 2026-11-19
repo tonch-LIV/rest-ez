@@ -1,3 +1,5 @@
+import JsonView from '@uiw/react-json-view';
+
 import './Results.scss';
 
 /**
@@ -27,11 +29,34 @@ function Results({ data, loading, error }) {
         <>
           <div>HTTP Status: {data.status}</div>
 
-          <h3>Headers</h3>
-          <pre>{JSON.stringify(data.headers, null, 2)}</pre>
+          <section aria-labelledby="response-headers-heading">
+            <h3 id="response-headers-heading">Headers</h3>
+            <JsonView
+              className="response-json"
+              value={data.headers}
+              collapsed={false}
+              shortenTextAfterLength={0}
+              displayDataTypes={false}
+              enableClipboard={false}
+            />
+          </section>
 
-          <h3>Body</h3>
-          <pre>{JSON.stringify(data.body, null, 2)}</pre>
+          <section aria-labelledby="response-body-heading">
+            <h3 id="response-body-heading">Body</h3>
+
+            {data.body !== null && typeof data.body === 'object' ? (
+              <JsonView
+                className="response-json"
+                value={data.body}
+                collapsed={false}
+                shortenTextAfterLength={0}
+                displayDataTypes={false}
+                enableClipboard={false}
+              />
+            ) : (
+              <pre>{JSON.stringify(data.body, null, 2)}</pre>
+            )}
+          </section>
         </>
       )}
     </section>

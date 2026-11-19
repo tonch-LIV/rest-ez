@@ -33,7 +33,6 @@ Open the local address printed by Vite.
 
 ## Current Limitations
 
-- Response formatting still uses preformatted text; the third-party JSON viewer is pending.  
 - Request history remains for a later phase.
 
 ## Phase 3 Progress
@@ -42,7 +41,8 @@ Open the local address printed by Vite.
 - Validates URL protocols and JSON request bodies before sending; `App.submitRequest`.
 - Displays response status, accessible headers, complete body, and errors; `Results`.
 - Manually verified live GET requests, repeated submissions, and invalid JSON handling.
-- Pending: third-party JSON viewer and MSW-based tests.
+- Added an expandable JSON viewer and MSW request tests; `Results`, `src/__tests__/App.test.jsx`, `src/test/server.js`.
+- Pending: phase 3 local check results and CI verification.
 
 ## Verification
 
@@ -61,7 +61,7 @@ Local ESLint, all five behavior tests, and the production build passed; `npm run
 
 **`Phase 3:`**  
 Phase 3 browser verification passed.  
-Automated tests, lint/build checks, and CI verification are pending.
+Phase 3 production build passed. Lint, tests, and CI verification are pending.
 
 ## UML
 
@@ -94,3 +94,4 @@ flowchart TD
 - Added request-flow tests and automated lint/test/build checks; `src/App.test.jsx`, `.github/workflows/ci.yml`.
 - Selected npm 11.6.0 for dependency installation locally and in CI; `README.md`, `.github/workflows/ci.yml`.
 - Added effect-driven live requests, cancellation, validation, and error output; `App`, `Form`, `Results`.
+- Added color-coded response trees and MSW integration tests; `Results`, `src/__tests__/App.test.jsx`, `src/test/`.
