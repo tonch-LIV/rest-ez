@@ -42,7 +42,7 @@ Open the local address printed by Vite.
 - Displays response status, accessible headers, complete body, and errors; `Results`.
 - Manually verified live GET requests, repeated submissions, and invalid JSON handling.
 - Added an expandable JSON viewer and MSW request tests; `Results`, `src/__tests__/App.test.jsx`, `src/test/server.js`.
-- Pending: phase 3 local check results and CI verification.
+- Pending: phase 3 GitHub Actions verification.
 
 ## Verification
 
@@ -61,7 +61,7 @@ Local ESLint, all five behavior tests, and the production build passed; `npm run
 
 **`Phase 3:`**  
 Phase 3 browser verification passed.  
-Phase 3 production build passed. Lint, tests, and CI verification are pending.
+Local ESLint, all eight integration tests, and the production build passed; `npm run lint`, `npm run test:run`, `npm run build`. GitHub Actions verification is pending.
 
 ## UML
 
