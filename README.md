@@ -33,8 +33,16 @@ Open the local address printed by Vite.
 
 ## Current Limitations
 
-- Responses remain mocked; no network request is performed.
+- Response formatting still uses preformatted text; the third-party JSON viewer is pending.  
 - Request history remains for a later phase.
+
+## Phase 3 Progress
+
+- Sends submitted requests through an effect with cancellation cleanup; `App`.
+- Validates URL protocols and JSON request bodies before sending; `App.submitRequest`.
+- Displays response status, accessible headers, complete body, and errors; `Results`.
+- Manually verified live GET requests, repeated submissions, and invalid JSON handling.
+- Pending: third-party JSON viewer and MSW-based tests.
 
 ## Verification
 
@@ -46,21 +54,29 @@ npm run test:run
 npm run build
 ```
 
+**`Phase 2:`**  
+GitHub Actions passed dependency installation, ESLint, all five tests, and the production build; `.github/workflows/ci.yml`.
+Deployment is not configured.  
 Local ESLint, all five behavior tests, and the production build passed; `npm run lint`, `npm run test:run`, `npm run build`.
 
-GitHub Actions passed dependency installation, ESLint, all five tests, and the production build; `.github/workflows/ci.yml`.
-Deployment is not configured.
+**`Phase 3:`**  
+Phase 3 browser verification passed.  
+Automated tests, lint/build checks, and CI verification are pending.
 
 ## UML
 
 ```mermaid
 flowchart TD
-    Main["main.jsx"] --> App["App<br/>useState: requestParams, data, loading"]
+    Main["main.jsx"] --> App["App<br/>requestParams, data, loading, error"]
     App --> Header["Header"]
     App --> Footer["Footer"]
-    App -->|"start/complete callbacks and loading"| Form["Form<br/>useState: url, method, body<br/>Runs mock request"]
-    Form -->|"request started/completed"| App
-    App -->|"data and loading"| Results["Results<br/>Loading or headers/body"]
+    App -->|"submission callback and loading"| Form["Form<br/>url, method, body"]
+    Form -->|"submitted values"| App
+    App -->|"requestParams changes"| Effect["useEffect"]
+    Effect -->|"fetch"| API["Remote API"]
+    API -->|"status, headers, body"| Effect
+    Effect -->|"update response state"| App
+    App -->|"data, loading, error"| Results["Results"]
 ```
 
 ## Pull Requests
@@ -77,3 +93,4 @@ flowchart TD
 - Added simulated request loading and separate response headers/body; `App`, `Form`, `Results`.
 - Added request-flow tests and automated lint/test/build checks; `src/App.test.jsx`, `.github/workflows/ci.yml`.
 - Selected npm 11.6.0 for dependency installation locally and in CI; `README.md`, `.github/workflows/ci.yml`.
+- Added effect-driven live requests, cancellation, validation, and error output; `App`, `Form`, `Results`.
